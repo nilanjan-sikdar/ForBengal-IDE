@@ -5,21 +5,31 @@ import proxy from "express-http-proxy"
 import cors from "cors"
 import cookieParser from "cookie-parser"
 import morgan from "morgan"
+import protect from "./middleware/project.js"
+import { getCurrentUser } from "./controllers/user.controller.js"
+import { proxyWithHeader } from "./utils/proxyWithHeaders.js"
 
-const port =process.env.PORT
+const port = process.env.PORT
 
-const app=express()
+const app = express()
 app.use(cors({
-    origin:process.env.FRONTEND_URL,
-    credentials:true
+    origin: process.env.FRONTEND_URL,
+    credentials: true
 }))
 app.use(morgan("dev"))
 app.use(cookieParser())
 
-app.get("/",(req,res)=>{
-    res.json({message:"hello from gateway"})
+app.use("/api/auth", proxy(process.env.AUTH_SERVICE))
+app.use("/api/me", protect, getCurrentUser)
+app.use("/api/project", protect, proxyWithHeader(process.env.PROJECT_SERVICE))
+app.use("/api/file", protect, proxyWithHeader(process.env.FILE_SERVICE))
+app.use("/api/terminal", protect, proxy(process.env.TERMINAL_SERVICE))
+app.use("/api/ai", protect, proxyWithHeader(process.env.AI_SERVICE))
+
+app.get("/", (req, res) => {
+    res.json({ message: "hello from gateway" })
 })
 
-app.listen(port,()=>{
+app.listen(port, () => {
     console.log(`gateway started at ${port}`)
 })
