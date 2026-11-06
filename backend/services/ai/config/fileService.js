@@ -81,3 +81,173 @@ const request = async (
 
   return data;
 };
+
+// =====================================================
+// GET PROJECT TREE
+// =====================================================
+
+export const getProjectTree =
+  async (
+    projectId,
+    userId
+  ) => {
+
+    if (!projectId) {
+      throw new Error(
+        "projectId is required"
+      );
+    }
+
+    return request(
+      `${FILE_SERVICE_URL}/tree/${projectId}`,
+      {},
+      userId
+    );
+  };
+
+  // =====================================================
+// CREATE FOLDER
+// =====================================================
+
+export const createFolder =
+  async (
+    body,
+    userId
+  ) => {
+
+    if (!body?.projectId) {
+      throw new Error(
+        "projectId is required"
+      );
+    }
+
+    if (!body?.name) {
+      throw new Error(
+        "Folder name is required"
+      );
+    }
+
+    return request(
+      `${FILE_SERVICE_URL}/folder`,
+      {
+        method: "POST",
+
+        body: JSON.stringify(
+          body
+        ),
+      },
+      userId
+    );
+  };
+
+  // =====================================================
+// CREATE FILE
+// =====================================================
+
+export const createFile =
+  async (
+    body,
+    userId
+  ) => {
+
+    if (!body?.projectId) {
+      throw new Error(
+        "projectId is required"
+      );
+    }
+
+    if (!body?.name) {
+      throw new Error(
+        "File name is required"
+      );
+    }
+
+    return request(
+      `${FILE_SERVICE_URL}/file`,
+      {
+        method: "POST",
+
+        body: JSON.stringify(
+          body
+        ),
+      },
+      userId
+    );
+  };
+
+// =====================================================
+// UPDATE FILE
+// =====================================================
+
+/*
+  File service route:
+
+  router.put("/:id", updateFile)
+
+  Therefore:
+
+  /file/:id   ❌
+  /:id        ✅
+*/
+
+export const updateFile =
+  async (
+    fileId,
+    body,
+    userId
+  ) => {
+
+    if (!fileId) {
+      throw new Error(
+        "fileId is required"
+      );
+    }
+
+    return request(
+      `${FILE_SERVICE_URL}/${fileId}`,
+      {
+        method: "PUT",
+
+        body: JSON.stringify(
+          body
+        ),
+      },
+      userId
+    );
+  };
+
+// =====================================================
+// DELETE FILE
+// =====================================================
+
+/*
+  File service route:
+
+  router.delete("/:id", deleteFile)
+
+  Therefore:
+
+  /file/:id   ❌
+  /:id        ✅
+*/
+
+export const deleteFile =
+  async (
+    fileId,
+    userId
+  ) => {
+
+    if (!fileId) {
+      throw new Error(
+        "fileId is required"
+      );
+    }
+
+    return request(
+      `${FILE_SERVICE_URL}/${fileId}`,
+      {
+        method: "DELETE",
+      },
+      userId
+    );
+  };
