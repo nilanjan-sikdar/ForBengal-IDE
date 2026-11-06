@@ -105,7 +105,43 @@ export const getProjectTree =
     );
   };
 
-  // =====================================================
+// =====================================================
+// GET SINGLE FILE
+// =====================================================
+
+/*
+  IMPORTANT:
+
+  File service route:
+
+  router.get("/:id", getFile)
+
+  Therefore:
+
+  /file/:id   ❌
+  /:id        ✅
+*/
+
+export const getFile =
+  async (
+    fileId,
+    userId
+  ) => {
+
+    if (!fileId) {
+      throw new Error(
+        "fileId is required"
+      );
+    }
+
+    return request(
+      `${FILE_SERVICE_URL}/${fileId}`,
+      {},
+      userId
+    );
+  };
+
+// =====================================================
 // CREATE FOLDER
 // =====================================================
 
@@ -140,7 +176,7 @@ export const createFolder =
     );
   };
 
-  // =====================================================
+// =====================================================
 // CREATE FILE
 // =====================================================
 
